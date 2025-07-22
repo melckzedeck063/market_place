@@ -1,6 +1,9 @@
 import { EyeIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import DataTable from 'react-data-table-component';
+import {UPDATE_USER} from '../apollo/Mutations'
+import { useMutation } from '@apollo/client';
+import { toast } from 'react-toastify';
 
 const customStyles = {
   headCells: {
@@ -23,6 +26,7 @@ const customStyles = {
 export default function UsersTable({ limit, users }) {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [updateUser] = useMutation(UPDATE_USER);
 
   const handleView = (user) => {
     setSelectedUser({ ...user }); // clone to allow editing
@@ -34,10 +38,53 @@ export default function UsersTable({ limit, users }) {
     setSelectedUser(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    alert(`User updated: ${JSON.stringify(selectedUser, null, 2)}`);
-    setShowModal(false);
-  };
+
+const handleSave = async () => {
+  const toastId = toast.loading("Updating user...");
+
+  try {
+    const { data } = await updateUser({
+      variables: {
+        uuid: selectedUser.uuid,
+        firstName: selectedUser.firstName,
+        lastName: selectedUser.lastName,
+        phone: selectedUser.phone,
+        username: selectedUser.username,
+        userRole: selectedUser.userType, // Assuming userType is used for userRole
+      },
+    });
+    
+
+    const res = data?.updateUser;
+
+    if (res?.error === false) {
+      toast.update(toastId, {
+        render: res.message || "User updated successfully!",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+      setShowModal(false);
+    } else {
+      toast.update(toastId, {
+        render: res?.message || "Failed to update user",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    toast.update(toastId, {
+      render: "An unexpected error occurred.",
+      type: "error",
+      isLoading: false,
+      autoClose: 3000,
+    });
+  }
+};
+
+
 
   const columns = [
     {
@@ -149,8 +196,8 @@ export default function UsersTable({ limit, users }) {
               >
                 <option value="">{selectedUser.userType}</option>
                 <option value="SUPER_ADMIN">SUPER_ADMIN</option>
-                <option value="ADMIN">ADMIN</option>
-                <option value="USER">USER</option>
+                <option value="MANAGER">SELLER</option>
+                <option value="DELIVERER">DELIVERER</option>
               </select>
             </label>
 

@@ -1,5 +1,6 @@
 import {createContext, useCallback, useMemo, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
+import { decryptData } from "../store/utils_encryption";
 
 
 const AuthContext = createContext();
@@ -15,8 +16,10 @@ const AuthProvider =  (props) => {
         const storage = sessionStorage.getItem("food_recipe");
 
         if (storage) {
-            const {data} = JSON.parse(storage);
-
+            const decrypted = decryptData(storage)
+            const {data} = JSON.parse(decrypted);
+            console.log({data});
+            
             setAuthenticatedUser(data);
             const origin = location.state?.from?.pathname || "/dashboard";
             navigate(origin)

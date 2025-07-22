@@ -1,115 +1,120 @@
-import { BellIcon, GroupIcon, HotelIcon, LayoutDashboardIcon, List, LogOutIcon, Share2Icon, User2, User2Icon, UserCircle, Users2Icon } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import {
+  BellIcon,
+  HotelIcon,
+  LayoutDashboardIcon,
+  List,
+  LogOutIcon,
+  User2Icon,
+  UserCircle,
+  Users2Icon,
+} from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import classNames from 'classnames';
 
+export default function MainLayout({ children, page }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
-import { useNavigate } from 'react-router';
-
-export default function MainLayout({children, page}) {
-
-   const [isModalOpen, setIsModalOpen] = useState(false);
-
-   const navigate = useNavigate()
-
-   const handleLogout  = ( ) => {
+  const handleLogout = () => {
+    setTimeout(() => {
+      navigate('/');
       setTimeout(() => {
-        navigate("/");
-        
-        setTimeout(() => {
-          sessionStorage.removeItem('dmz-token')
-        }, 500);
+        sessionStorage.removeItem('dmz-token');
+      }, 500);
     }, 1000);
-    }
+  };
 
+  const navLinks = [
+    { to: '/dashboard', label: 'Dashboard', icon: <LayoutDashboardIcon /> },
+    { to: '/restaurants', label: 'Restaurants', icon: <HotelIcon /> },
+    { to: '/orders', label: 'Orders', icon: <List /> },
+    { to: '/users', label: 'Users', icon: <Users2Icon /> },
+    { to: '/profile', label: 'My Profile', icon: <UserCircle /> },
+  ];
 
   return (
-    <div className='bg-white'>
+    <div className="flex min-h-screen bg-white">
+      {/* Sidebar */}
+      <aside
+        className={classNames(
+          'fixed top-0 left-0 z-40 w-64 h-screen transition-transform bg-white shadow-lg',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          'sm:translate-x-0'
+        )}
+      >
+        <div className="h-full px-4 py-6 overflow-y-auto">
+          <div className="text-orange-500 text-2xl font-bold mb-8">Food Recipe</div>
+          <ul className="space-y-2">
+            {navLinks.map((link) => (
+              <li key={link.to}>
+                <NavLink
+                  to={link.to}
+                  className={({ isActive }) =>
+                    classNames(
+                      'flex items-center p-2 rounded-lg transition',
+                      isActive
+                        ? 'bg-orange-100 text-orange-600 font-semibold'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    )
+                  }
+                >
+                  <span className="mr-3">{link.icon}</span>
+                  {link.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
 
-<button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar" aria-controls="cta-button-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-600 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-600 dark:hover:bg-gray-100 dark:focus:ring-gray-600">
-   <span class="sr-only">Open sidebar</span>
-   <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-   <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-   </svg>
-</button>
-
-<aside id="cta-button-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-   <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-white shadow-md">
-    <div className="text-orange-500 text-2xl font-bold mt-6 mb-8">My Market</div>
-      <ul class="space-y-2 font-medium">
-         <li className='mb-2'>
-            <a href="/dashboard" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group">
-               <LayoutDashboardIcon className='text-gray-600' />
-               <span class="ms-3 text-gray-600">Dashboard</span>
-            </a>
-         </li>
-         
-         <li className='mb-2'>
-            <a href="/shares" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group" >
-            <HotelIcon className='text-gray-600' />
-               <span class="flex-1 ms-3 text-gray-600 whitespace-nowrap">Stores</span>
-            </a>
-         </li>
-         <li className='mb-2'>
-            <a href="/contributions" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group">
-            <List className='text-gray-600' />
-               <span class="flex-1 ms-3 text-gray-600 whitespace-nowrap">Orders</span>
-            </a>
-         </li>
-         {/* <li className='mb-2'>
-            <a href="/loans" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group">
-            <img src={`${loan}`} alt="" className='h-6 w-6 imt-1' />
-               <span class="flex-1 ms-3 text-gray-600 whitespace-nowrap">Loans</span>
-            </a>
-         </li> */}
-         <li className='mb-3'>
-            <a href="/users" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group">
-            <Users2Icon className='text-gray-600' />
-               <span class="flex-1 ms-3 text-gray-600 whitespace-nowrap">Users</span>
-            </a>
-         </li>
-
-         {/* <li className='mb-3'>
-            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group">
-            <img src={`${paym}`} alt="" className='h-6 w-6 imt-1' />
-               <span class="flex-1 ms-3 text-gray-600 whitespace-nowrap">Payments</span>
-            </a>
-         </li> */}
-         <li className='mb-3'>
-            <a href="/profile" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group">
-            <UserCircle className='text-gray-600' />
-               <span class="flex-1 ms-3 text-gray-600 whitespace-nowrap">My Profile</span>
-            </a>
-         </li>
-      </ul>
-      
-
-      <div className="mt-12 bottom-0">
-      <button onClick={handleLogout} type="button" className="text-white w-full flex items-center justify-center  bg-red-400 hover:bg-red-400 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-400 dark:hover:bg-red-400">
-      <LogOutIcon  className='mr-2' />
-            Logout
-        </button>
-      </div>
-
-   </div>
-</aside>
-
- <div className="flex-1 ml-64">
-    <div className="border-b h-16 mr-8 bg-white">
-        <div className="flex flex-row items-center justify-between">
-            <div className="font-bold text-2xl text-orange-500 ml-2">{page}</div>
-            <div className="flex mt-4 space-x-4">
-                <BellIcon  className='mt-2' />
-                <div className="h-10 w-10 border p-2 rounded-full">
-                    <div className="absolute bg-orange-500 opacity-30"></div>
-                    <User2Icon  />
-                </div>
-            </div>
+          <div className="absolute bottom-6 left-4 right-4">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg px-4 py-2 text-sm"
+            >
+              <LogOutIcon className="mr-2" size={18} />
+              Logout
+            </button>
+          </div>
         </div>
-    </div>
-    <div className="bg-gray-100">
-    {children}
-    </div>
-    </div>
+      </aside>
 
+      {/* Main Content */}
+      <div className="flex-1 sm:ml-64 flex flex-col min-h-screen bg-gray-100">
+        {/* Top Bar */}
+        <div className="sticky top-0 bg-white border-b h-16 flex items-center justify-between px-4 z-20">
+          {/* Toggle button for small screens */}
+          <button
+            onClick={() => setSidebarOpen((prev) => !prev)}
+            className="sm:hidden text-gray-600 hover:text-orange-500"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+
+          <div className="font-bold text-xl text-orange-500">{page}</div>
+
+          <div className="flex items-center space-x-4">
+            <BellIcon className="text-gray-600" />
+            <div className="h-10 w-10 flex items-center justify-center rounded-full bg-orange-100 text-orange-600">
+              <User2Icon />
+            </div>
+          </div>
+        </div>
+
+        {/* Page content */}
+        <div className="p-4 flex-grow">{children}</div>
+      </div>
     </div>
-  )
+  );
 }

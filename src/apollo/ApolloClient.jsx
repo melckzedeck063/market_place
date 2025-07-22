@@ -1,8 +1,9 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { decryptData } from "../store/utils_encryption";
 
 const httpLink = createHttpLink({
-  uri: "http://13.49.185.11:8070/graphql",
+  uri: "http://localhost:8070/graphql",
 });
 
 let token = "";
@@ -10,7 +11,8 @@ let token = "";
 try {
   const storage = sessionStorage.getItem("food_recipe");
   if (storage) {
-    const parsed = JSON.parse(storage);
+    const decrypted = decryptData(storage);
+    const parsed = JSON.parse(decrypted);
     token = parsed?.data?.token || "";
   }
 } catch (error) {

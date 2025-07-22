@@ -1,4 +1,5 @@
 import {useState} from "react";
+import { decryptData } from "../store/utils_encryption";
 
 
 export default  function AuthGuard() {
@@ -8,7 +9,8 @@ export default  function AuthGuard() {
         const tokenString = sessionStorage.getItem("food_recipe");
 
         if (tokenString) {
-            const { data } = JSON.parse(tokenString);
+            const decrypted = decryptData(tokenString);
+            const { data } = JSON.parse(decrypted);
             return data;
         }
 

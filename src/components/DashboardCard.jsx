@@ -1,21 +1,20 @@
-import { ListChecks } from 'lucide-react'
-import React from 'react'
+import React from 'react';
 
-export default function DashboardCard({available, icon, title, percent}) {
+export default function DashboardCard({ title, available, icon }) {
   return (
-    <div className='font-poppins'>
-        <div class="flex sm:flex-row rounded-lg h-full bg-white p-6 flex-col">
-        <div class="flex-grow sm:text-left text-center mt-6 sm:mt-0">
-        <h2 class="text-orange-500 text-4xl font-poppins font-semibold mb-2">{available}</h2>
-        <p class="leading-relaxed text-sm font-medium"> {title} </p>
-        
-        
+    <div className="bg-white shadow-md border border-orange-300 hover:shadow-xl transition-shadow duration-300 rounded-xl p-5 flex items-center gap-4">
+      {/* Icon Container */}
+      <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-100 text-orange-500 text-lg">
+        {icon}
       </div>
-      <div class="sm:w-20 sm:order-none order-first sm:h-20 h-14 w-14 mt-4 sm:ml-10 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0">
-        <span className='text-teal-600 text-xl font-bold' > {icon} </span>
-        
+
+      {/* Info Section */}
+      <div className="flex flex-col">
+        <span className="text-sm text-gray-500">{title}</span>
+        <span className="text-2xl font-semibold text-gray-800 mt-1">
+          {available ?? 0}
+        </span>
       </div>
-        </div>
     </div>
-  )
+  );
 }

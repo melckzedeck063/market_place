@@ -1,6 +1,7 @@
 import axios from "axios";
 import {BASE_URL} from "../urls";
 import {createAsyncThunk} from "@reduxjs/toolkit";
+import { encryptData } from "../utils_encryption";
 
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -26,8 +27,10 @@ export const loginUser =  createAsyncThunk('/login', async  (values) => {
             password : values.password
         });
         console.log("Function called")
-        console.log(response.data);
-        sessionStorage.setItem("food_recipe", JSON.stringify(response.data));
+        // console.log(response.data);
+
+        const encrypted = encryptData(response.data);
+        sessionStorage.setItem("food_recipe", encrypted);
 
         return  response.data;
     }

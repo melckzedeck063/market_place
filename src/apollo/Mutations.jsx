@@ -56,3 +56,32 @@ mutation($status: String! $uuid: String!) {
   }
 }`
 ;
+
+
+export const UPDATE_USER = gql`
+mutation MyMutation($firstName: String!, $lastName: String!, $phone: String!, $username: String!, $uuid: String!, $userRole: String!) {
+  updateUser(
+    firstName: $firstName
+    lastName: $lastName
+    phone: $phone
+    username: $username
+    uuid: $uuid
+    userRole: $userRole
+  ) {
+    message
+    error
+    data {
+      firstName
+      lastName
+      userType
+      username
+      phone
+      permissions
+      active
+      created_at
+      id
+      updated_at
+      uuid
+    }
+  }
+}`
