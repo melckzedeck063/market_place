@@ -3,7 +3,7 @@ import { setContext } from "@apollo/client/link/context";
 import { decryptData } from "../store/utils_encryption";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:8070/graphql",
+  uri: "http://161.97.81.149:8070/graphql",
 });
 
 let token = "";
